@@ -28,33 +28,28 @@ applicationName = 'git-repo-api'
 
 mainClassName = 'us.martink.lunar.LunarApplication'
 
-//ext {
-//    dockerRepo = 'gitlab.bite.lt:4567'
-//    dockerNamespace = 'fss/fss-ui-mods'
-//    dockerImage = applicationName
-//}
-
-sourceCompatibility = 1.11
-targetCompatibility = 1.11
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 dependencies {
-    compile("org.projectlombok:lombok:1.18.8")
+    compileOnly("org.projectlombok:lombok:1.18.8")
+    annotationProcessor("org.projectlombok:lombok:1.18.8")
 
-    compile("org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}")
-    compile("org.springframework.boot:spring-boot-starter-web:${springBootVersion}")
-
+    implementation("org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}")
+    implementation("org.springframework.boot:spring-boot-starter-web:${springBootVersion}")
 }
-//
-//docker {
-//    dockerBinary System.getProperty("dockerBinary") ?: dockerBinary
-//    baseImage 'fabric8/java-centos-openjdk8-jre:1.2'
-//    maintainer 'Tadas Martinkus "t.martinkus@ba.lt"'
-//}
-//
-//task buildDocker(type: Docker, dependsOn: ['check', 'bootRepackage']) {
-//    tag = "${dockerRepo}/${dockerNamespace}/${dockerImage}"
-//
-//    exposePort 8080
-//    addFile './prod-logging/json-logback.xml', '/json-logback.xml'
-//    addFile jar.archivePath, '/deployments/bite-index-web-app.jar'
-//}
+
+docker {
+    baseImage = 'openjdk:11.0.4-slim'
+}
+
+task buildDocker(type: Docker) {
+    push = true
+
+    applicationName = bootJar.baseName
+    tag = "s33kers/git"
+
+    addFile jar.archivePath, 'app.jar'
+    entryPoint(['java', '-jar', 'app.jar'])
+    exposePort 8080
+}

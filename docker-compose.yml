@@ -1,0 +1,5 @@
+version: "3"
+
+services:
+  lunar-git:
+    image: s33kers/git:0.0.1-SNAPSHOT
