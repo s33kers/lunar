@@ -46,7 +46,7 @@ docker {
 }
 
 task buildDocker(type: Docker) {
-    push = true
+    push = System.getenv('PUSH_DOCKER')
 
     applicationName = bootJar.baseName
     tag = "s33kers/git"
