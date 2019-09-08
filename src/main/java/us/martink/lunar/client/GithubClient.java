@@ -21,7 +21,7 @@ import java.util.Set;
 @Component
 public class GithubClient {
 
-    private static final String SEARCH_REPOSITORIES = "/search/repositories?q={query}&sort={sort}&order={order}";
+    private static final String SEARCH_REPOSITORIES = "/search/repositories?q={query}&sort={sort}&order={order}&page=1&per_page=10";
     private static final String REPOSITORY_CONTRIBUTORS = "/repos/{name}/{repo}/stats/contributors?anon=true";
     private static final String STARRED_BY_USER = "/user/starred";
     private static final String STAR_REPOSITORY = "/user/starred/{name}/{repo}";
