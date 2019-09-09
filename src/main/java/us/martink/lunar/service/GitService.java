@@ -6,6 +6,7 @@ import us.martink.lunar.api.model.GitRepoResponse;
 import us.martink.lunar.client.GithubClient;
 import us.martink.lunar.client.model.GitRepo;
 import us.martink.lunar.client.model.GitRepoStarredResponse;
+import us.martink.lunar.context.RequestContext;
 import us.martink.lunar.context.RequestContextHolder;
 
 import java.util.Collections;
@@ -38,10 +39,10 @@ public class GitService {
         }
 
         Set<Long> reposStarredByUser = getUserFavoritedRepoIds();
-
+        RequestContext requestContext = RequestContextHolder.getContext();
         return items
                 .parallelStream()
-                .map(g -> buildGitRepoResponse(g, reposStarredByUser))
+                .map(g -> buildGitRepoResponse(g, reposStarredByUser, requestContext))
                 .collect(Collectors.toList());
     }
 
@@ -54,14 +55,16 @@ public class GitService {
         return reposStarredByUser;
     }
 
-    private GitRepoResponse buildGitRepoResponse(GitRepo gitRepo, Set<Long> reposStarredByUser) {
+    private GitRepoResponse buildGitRepoResponse(GitRepo gitRepo, Set<Long> reposStarredByUser, RequestContext requestContext) {
+        RequestContextHolder.setContext(requestContext);
+
         GitRepoResponse gitRepoResponse = new GitRepoResponse();
         gitRepoResponse.setName(gitRepo.getName());
         gitRepoResponse.setDescription(gitRepo.getDescription());
         gitRepoResponse.setLicenseName(gitRepo.getLicenseName());
         gitRepoResponse.setLinkToRepo(gitRepo.getLinkToRepo());
         gitRepoResponse.setStarsCount(gitRepo.getStarsCount());
-//TODO        gitRepoResponse.setContributors(githubClient.getReposContributors(gitRepo.getLogin(), gitRepo.getName()));
+        gitRepoResponse.setContributors(githubClient.getReposContributors(gitRepo.getLogin(), gitRepo.getName()));
         if (!reposStarredByUser.isEmpty()) {
             gitRepoResponse.setFavorite(reposStarredByUser.contains(gitRepo.getId()));
         }

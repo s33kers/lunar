@@ -21,6 +21,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.only;
@@ -71,6 +72,7 @@ public class GitServiceTest {
 
         when(githubClient.getRepos()).thenReturn(createReposResponse(3));
         when(githubClient.getReposStarredByUser()).thenReturn(createReposStarredByUserResponse());
+        when(githubClient.getReposContributors(anyString(), anyString())).thenReturn(10L);
 
         List<GitRepoResponse> gitRepositories = gitService.getGitRepositories();
 
@@ -83,6 +85,7 @@ public class GitServiceTest {
     @Test
     public void getGitRepositories_someRepos_unAuthorized() {
         when(githubClient.getRepos()).thenReturn(createReposResponse(3));
+        when(githubClient.getReposContributors(anyString(), anyString())).thenReturn(10L);
 
         List<GitRepoResponse> gitRepositories = gitService.getGitRepositories();
 
