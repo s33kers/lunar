@@ -21,6 +21,7 @@ DELETE /git/{owner}/repo
 ```
 
 ## Running application
+PORT 8080
 
 ### Docker
 Docker compose file is provided with image from Docker Hub. 
